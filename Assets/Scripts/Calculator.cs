@@ -5,22 +5,42 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Data;
 using System;
+using TMPro;
 
 public class Calculator : MonoBehaviour
 {
-    public Text res;
+    public TextMeshProUGUI res;
     public Text shower;
+    bool _clearShowText;
     //public string calc;
-    public string x1;
-    string x2 = "";
+    //string x1;
+    string _expression = "";
     
-    
-
     public void On_Click_Bttn(string symbol)
     {
-        shower.text += symbol;
+        if (_clearShowText)
+        {
+            _clearShowText = false;
+            shower.text = "";
+        }
+        char symbolByChar = symbol[0];
+        if (shower.text.Length == 0)
+        {
+            if (IsnotOperator(symbolByChar))
+            {
+                shower.text += symbol;
+            }
+        }
+        else
+        {
+            char s = shower.text[shower.text.Length - 1];
+            if (IsnotOperator(s) != IsnotOperator(symbolByChar) || (IsnotOperator(s) == true && IsnotOperator(symbolByChar) == true))
+            {
+                shower.text += symbol;
+            }
+        }
     }
-
+    bool IsnotOperator(char s) => (s != '+' && s != '-' && s != '*' && s != '/' && s!='.');
     public void Clear()
     {
         shower.text = "";
@@ -28,20 +48,23 @@ public class Calculator : MonoBehaviour
     
     public void Calculate()
     {
-        DataTable dt = new DataTable();
-        x1=(dt.Compute(shower.text,"")).ToString();
-        x2 = x1;
-        x2= Math.Round(Convert.ToDouble(x2),3).ToString();
-        x2 = x2.Replace(',','.');
-        shower.text = x2;
+        if (shower.text.Length != 0 && IsnotOperator(shower.text[shower.text.Length-1]))
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                _expression = dt.Compute(shower.text, "").ToString();
+                _expression = Math.Round(Convert.ToDouble(_expression), 3).ToString();
+                _expression = _expression.Replace(',', '.');
+                shower.text = _expression;
 
-        if (x2 == "")
-        {
-            res.text = "Немає розрахунків";
-        }
-        else
-        {
-            res.text = x2;
+                res.text = _expression;
+            }
+            catch
+            {
+                _clearShowText = true;
+                shower.text = "Щось пішло не по плану";
+            }
         }
     }
 
@@ -50,15 +73,4 @@ public class Calculator : MonoBehaviour
        shower.text= shower.text.Remove(shower.text.Length-1,1);
     }
 
-     void Start()
-    {
-        if (x2 == "")
-        {
-            res.text = "Немає розрахунків";
-        }
-        else
-        {
-            res.text = x2;
-        }
-    }
 }
