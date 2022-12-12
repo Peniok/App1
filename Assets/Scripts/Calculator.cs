@@ -10,10 +10,9 @@ using TMPro;
 public class Calculator : MonoBehaviour
 {
     public TextMeshProUGUI res;
-    public Text shower;
+    public TextMeshProUGUI shower;
     bool _clearShowText;
-    //public string calc;
-    //string x1;
+
     string _expression = "";
     
     public void On_Click_Bttn(string symbol)
