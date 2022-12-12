@@ -10,18 +10,18 @@ public class Calculator : MonoBehaviour
 {
     public Text res;
     public Text shower;
-    public string calc;
+    //public string calc;
     public string x1;
     string x2 = "";
     
     
 
-    public void On_Click_Bttn()
+    public void On_Click_Bttn(string symbol)
     {
-        shower.text += calc;
+        shower.text += symbol;
     }
 
-    public void Reset()
+    public void Clear()
     {
         shower.text = "";
     }
